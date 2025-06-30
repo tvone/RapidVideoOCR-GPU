@@ -10,7 +10,7 @@ txt_path = "/content/drive/MyDrive/RapidVideoOCR/models/PP-OCRv5_server_rec_infe
 ocr_input_params = RapidVideOCRInput(
    is_batch_rec=False,
    ocr_params={
-        "Rec.model_path": model_v5,
+        "Rec.model_dir": model_v5,
         "Rec.engine_type": EngineType.PADDLE,
         "Rec.lang_type": LangRec.JAPAN,
         "Rec.model_type": ModelType.SERVER,
