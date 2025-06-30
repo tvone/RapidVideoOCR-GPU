@@ -13,11 +13,12 @@ ocr_input_params = RapidVideOCRInput(
         "Rec.model_path": model_v5,
         "Rec.engine_type": EngineType.PADDLE,
         "Rec.lang_type": LangRec.JAPAN,
+        "Rec.task_type" : "rec",
         "Rec.model_type": ModelType.SERVER,
         "Rec.ocr_version": OCRVersion.PPOCRV5,
-        "EngineConfig.torch.use_cuda": True,  # 使用torch GPU版推理
-        "EngineConfig.torch.gpu_id": 0,  # 指定GPU id
-        "Rec.character_dict_path" : txt_path
+        "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
+        "EngineConfig.paddle.gpu_id": 0,  # 指定GPU id
+        "Rec.character_dict_path": txt_path
    }
 )
 # Version GPU for google colab
