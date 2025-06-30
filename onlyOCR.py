@@ -23,7 +23,7 @@ ocr_input_params = RapidVideOCRInput(
 # Version GPU for google colab
 extractor = RapidVideOCR(ocr_input_params)
 
-rgb_dir = "/content/drive/MyDrive/RapidVideoOCR/images"
+rgb_dir = "images"
 save_dir = "/content/drive/MyDrive/RapidVideoOCR/outputs"
 
 # save_name = "sub_ocr_new"
