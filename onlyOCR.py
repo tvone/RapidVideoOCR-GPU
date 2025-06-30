@@ -20,10 +20,12 @@ ocr_input_params = RapidVideOCRInput(
         "EngineConfig.torch.gpu_id": 0,  # 指定GPU id
    }
 )
+# Version GPU for google colab
 extractor = RapidVideOCR(ocr_input_params)
 
-rgb_dir = "images"
-save_dir = "outputs"
+rgb_dir = "/content/drive/MyDrive/RapidVideoOCR/images"
+save_dir = "/content/drive/MyDrive/RapidVideoOCR/outputs"
+
 # save_name = "sub_ocr_new"
 
 for folder in glob.glob(os.path.join(rgb_dir, "*/")):
