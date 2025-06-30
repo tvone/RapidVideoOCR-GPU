@@ -3,21 +3,21 @@ from rapidocr import EngineType, LangRec, ModelType, OCRVersion
 import glob
 import os
 
-model_v3 = "models/japan_PP-OCRv3_rec_infer.onnx"
-model_v4 = "models/japan_PP-OCRv4_rec_infer.onnx"
-model_v5 = "models/PP-OCRv5_server_rec_infer.onnx"
 
+model_v5 = "/content/drive/MyDrive/RapidVideoOCR/models/PP-OCRv5_server_rec_infer"
+txt_path = "/content/drive/MyDrive/RapidVideoOCR/models/PP-OCRv5_server_rec_infer/ppocrv5_dict.txt"
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 ocr_input_params = RapidVideOCRInput(
    is_batch_rec=False,
    ocr_params={
         "Rec.model_path": model_v5,
-        "Rec.engine_type": EngineType.TORCH,
+        "Rec.engine_type": EngineType.PADDLE,
         "Rec.lang_type": LangRec.JAPAN,
         "Rec.model_type": ModelType.SERVER,
         "Rec.ocr_version": OCRVersion.PPOCRV5,
         "EngineConfig.torch.use_cuda": True,  # 使用torch GPU版推理
         "EngineConfig.torch.gpu_id": 0,  # 指定GPU id
+        "Rec.character_dict_path" : txt_path
    }
 )
 # Version GPU for google colab
