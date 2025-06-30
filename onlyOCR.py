@@ -17,7 +17,7 @@ ocr_input_params = RapidVideOCRInput(
         "Rec.ocr_version": OCRVersion.PPOCRV5,
         "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
         "EngineConfig.paddle.gpu_id": 0,  # 指定GPU id
-        "Rec.character_dict_path": txt_path
+        "Rec.rec_keys_path": txt_path
    }
 )
 # Version GPU for google colab
