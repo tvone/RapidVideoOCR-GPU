@@ -1,0 +1,1 @@
+Add the folder containing the images to the images folder
