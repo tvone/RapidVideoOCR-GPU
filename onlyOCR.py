@@ -12,10 +12,12 @@ ocr_input_params = RapidVideOCRInput(
    is_batch_rec=False,
    ocr_params={
         "Rec.model_path": model_v5,
-        "Rec.engine_type": EngineType.ONNXRUNTIME,
+        "Rec.engine_type": EngineType.TORCH,
         "Rec.lang_type": LangRec.JAPAN,
         "Rec.model_type": ModelType.SERVER,
         "Rec.ocr_version": OCRVersion.PPOCRV5,
+        "EngineConfig.torch.use_cuda": True,  # 使用torch GPU版推理
+        "EngineConfig.torch.gpu_id": 0,  # 指定GPU id
    }
 )
 extractor = RapidVideOCR(ocr_input_params)
