@@ -13,7 +13,6 @@ ocr_input_params = RapidVideOCRInput(
         "Rec.model_path": model_v5,
         "Rec.engine_type": EngineType.PADDLE,
         "Rec.lang_type": LangRec.JAPAN,
-        "Rec.task_type" : "rec",
         "Rec.model_type": ModelType.SERVER,
         "Rec.ocr_version": OCRVersion.PPOCRV5,
         "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
