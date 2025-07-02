@@ -7,7 +7,8 @@ model_v5 = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer"
 txt_path = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer/ppocrv5_dict.txt"
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 ocr_input_params = RapidVideOCRInput(
-    is_batch_rec=False,
+    is_batch_rec=True,
+    batch_size=16,
     out_format="srt",
     # Document params: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/parameters/?h=rec+lang+type
     ocr_params={
