@@ -3,8 +3,12 @@ from rapidocr import EngineType, LangRec, ModelType, OCRVersion, LangDet
 import glob
 import os
 
-model_v5_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer"
-model_v5_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_det_infer"
+model_v5_server_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer"
+model_v5_server_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_det_infer"
+
+model_v5_mobile_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_mobile_rec_infer"
+model_v5_mobile_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_mobile_det_infer"
+
 txt_path = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer/ppocrv5_dict.txt"
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 
@@ -14,16 +18,16 @@ ocr_input_params = RapidVideOCRInput(
     out_format="srt",
     # Document params: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/parameters/?h=rec+lang+type
     ocr_params={
-        "Rec.model_dir": model_v5_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
+        "Rec.model_dir": model_v5_mobile_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
         "Rec.engine_type": EngineType.PADDLE,
         "Rec.lang_type": LangRec.JAPAN,
         "Rec.model_type": ModelType.SERVER,
         "Rec.ocr_version": OCRVersion.PPOCRV5,
-        # "Det.model_dir": model_v5_det,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
-        # "Det.engine_type": EngineType.PADDLE,
-        # "Det.lang_type": LangDet.MULTI,
-        # "Det.model_type": ModelType.SERVER,
-        # "Det.ocr_version": OCRVersion.PPOCRV5,
+        "Det.model_dir": model_v5_mobile_det,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
+        "Det.engine_type": EngineType.PADDLE,
+        "Det.lang_type": LangDet.MULTI,
+        "Det.model_type": ModelType.SERVER,
+        "Det.ocr_version": OCRVersion.PPOCRV5,
         "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
         "EngineConfig.paddle.gpu_id": 0,  # 指定GPU id
         "EngineConfig.paddle.gpu_mem": 12288,  # 指定GPU memory
