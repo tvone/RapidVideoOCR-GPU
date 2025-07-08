@@ -71,9 +71,9 @@ def get_limit_side_len(max_height, batch_size, padding=10):
     elif batch_height < 640:
         limit_side_len = 736
     elif batch_height < 960:
-        limit_side_len = 1024
-    else:
         limit_side_len = 960
+    else:
+        limit_side_len = 1024
     # Multiples of 32
     if limit_side_len % 32 != 0:
         limit_side_len = ((limit_side_len // 32) + 1) * 32
