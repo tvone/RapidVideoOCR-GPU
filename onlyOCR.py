@@ -24,6 +24,7 @@ ocr_input_params = RapidVideOCRInput(
         "Global.use_det": True,
         "Global.use_rec": True,
         "Global.use_cls": True,
+        "Global.max_side_len": 2000,
         "Rec.model_dir": model_v5_server_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
         "Rec.engine_type": EngineType.PADDLE,
         "Rec.lang_type": LangRec.JAPAN,
@@ -83,7 +84,7 @@ for folder in glob.glob(os.path.join(rgb_dir, "*/")):
 
         folder_ocr_params = deepcopy(ocr_input_params.ocr_params)
         folder_ocr_params["Det.limit_side_len"] = limit_side_len
-
+        folder_ocr_params["Global.max_side_len"] = w * target_scale
         # print(folder_ocr_params)
 
         folder_extractor = RapidVideOCR(
