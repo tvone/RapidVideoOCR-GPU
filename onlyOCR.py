@@ -132,7 +132,7 @@ for folder in glob.glob(os.path.join(rgb_dir, "*/")):
         folder_extractor(folder, save_dir, save_name=folder_name)
 
 
-print(max_height_in_all_folder)
+# print(max_height_in_all_folder)
 
 # folder = "images/name folder"
 #
