@@ -24,7 +24,7 @@ ocr_input_params = RapidVideOCRInput(
         "Global.use_det": True,
         "Global.use_rec": True,
         "Global.use_cls": True,
-        "Global.max_side_len": 2000,
+        "Global.max_side_len": 4000,
         "Rec.model_dir": model_v5_server_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
         "Rec.engine_type": EngineType.PADDLE,
         "Rec.lang_type": LangRec.JAPAN,
@@ -75,7 +75,8 @@ for folder in glob.glob(os.path.join(rgb_dir, "*/")):
         with Image.open(image_files) as img:
             w, h = img.size  # h = crop_height (giả sử crop sub dọc)
 
-        limit_side_len = int(target_scale * (batch_size * (h + padding)))
+        size_image = int(target_scale * (batch_size * (h + padding)))
+        limit_side_len = size_image
         # Require multiples of 32
         if limit_side_len % 32 != 0:
             limit_side_len = ((limit_side_len // 32) + 1) * 32
@@ -83,8 +84,8 @@ for folder in glob.glob(os.path.join(rgb_dir, "*/")):
         # print(limit_side_len)
 
         folder_ocr_params = deepcopy(ocr_input_params.ocr_params)
-        folder_ocr_params["Det.limit_side_len"] = limit_side_len
-        folder_ocr_params["Global.max_side_len"] = w * target_scale
+        folder_ocr_params["Det.limit_side_len"] = 736 if size_image < 736 else limit_side_len
+        # folder_ocr_params["Global.max_side_len"] = w * target_scale
         # print(folder_ocr_params)
 
         folder_extractor = RapidVideOCR(
