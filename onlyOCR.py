@@ -59,6 +59,28 @@ target_scale = 2
 batch_size = 6
 padding = 10
 
+max_height = 0
+
+
+def get_limit_side_len(max_height, batch_size, padding=10):
+    batch_height = batch_size * (max_height + padding)
+    if batch_height < 320:
+        limit_side_len = 320
+    elif batch_height < 480:
+        limit_side_len = 480
+    elif batch_height < 640:
+        limit_side_len = 640
+    elif batch_height < 960:
+        limit_side_len = 736
+    else:
+        limit_side_len = 960
+    # Multiples of 32
+    if limit_side_len % 32 != 0:
+        limit_side_len = ((limit_side_len // 32) + 1) * 32
+    return limit_side_len
+
+
+
 for folder in glob.glob(os.path.join(rgb_dir, "*/")):
     if os.path.isdir(folder):
         folder_name = os.path.basename(os.path.normpath(folder))
@@ -75,15 +97,27 @@ for folder in glob.glob(os.path.join(rgb_dir, "*/")):
         with Image.open(image_files) as img:
             w, h = img.size  # h = crop_height (giả sử crop sub dọc)
 
-        limit_side_len = int(target_scale * (batch_size * (h + padding)))
-        # Require multiples of 32
-        if limit_side_len % 32 != 0:
-            limit_side_len = ((limit_side_len // 32) + 1) * 32
+        # Check max height images in all folder
+        if max_height_in_all_folder < h:
+            max_height_in_all_folder = h
+
+        # size_image_with_padding = batch_size * (h + padding)
+        # limit_side_len = int(target_scale * (batch_size * (h + padding)))
+        # # Require multiples of 32
+        # if limit_side_len % 32 != 0:
+        #     limit_side_len = ((limit_side_len // 32) + 1) * 32
 
         # print(limit_side_len)
+        rec_img_shape = [3, 32, 320]
+
+        if h >= 64:
+            rec_img_shape = [3, 64, 320]
+        else:
+            rec_img_shape = [3, 48, 320]
 
         folder_ocr_params = deepcopy(ocr_input_params.ocr_params)
-        folder_ocr_params["Det.limit_side_len"] = 736 if limit_side_len < 736 else limit_side_len
+        folder_ocr_params["Rec.rec_img_shape"] = rec_img_shape
+        folder_ocr_params["Det.limit_side_len"] = get_limit_side_len(batch_size=batch_size, max_height=h)
         # folder_ocr_params["Global.max_side_len"] = w * target_scale
         # print(folder_ocr_params)
 
@@ -98,6 +132,7 @@ for folder in glob.glob(os.path.join(rgb_dir, "*/")):
         folder_extractor(folder, save_dir, save_name=folder_name)
 
 
+print(max_height_in_all_folder)
 
 # folder = "images/name folder"
 #
