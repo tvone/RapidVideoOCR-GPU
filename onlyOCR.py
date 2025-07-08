@@ -65,13 +65,13 @@ max_height = 0
 def get_limit_side_len(max_height, batch_size, padding=10):
     batch_height = batch_size * (max_height + padding)
     if batch_height < 320:
-        limit_side_len = 320
-    elif batch_height < 480:
         limit_side_len = 480
-    elif batch_height < 640:
+    elif batch_height < 480:
         limit_side_len = 640
-    elif batch_height < 960:
+    elif batch_height < 640:
         limit_side_len = 736
+    elif batch_height < 960:
+        limit_side_len = 1024
     else:
         limit_side_len = 960
     # Multiples of 32
