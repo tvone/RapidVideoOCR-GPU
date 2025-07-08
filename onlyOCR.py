@@ -80,6 +80,7 @@ def get_limit_side_len(max_height, batch_size, padding=10):
     return limit_side_len
 
 
+max_height_in_all_folder = 0
 
 for folder in glob.glob(os.path.join(rgb_dir, "*/")):
     if os.path.isdir(folder):
