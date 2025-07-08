@@ -5,7 +5,7 @@ import os
 from PIL import Image
 from copy import deepcopy
 
-linux = False
+linux = True
 model_v5_server_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer" if linux else "./models/PP-OCRv5_server_rec_infer"
 model_v5_server_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_det_infer" if linux else  "./models/PP-OCRv5_server_det_infer"
 
@@ -37,9 +37,9 @@ ocr_input_params = RapidVideOCRInput(
         "Det.model_type": ModelType.SERVER,
         "Det.ocr_version": OCRVersion.PPOCRV5,
 
-        "Det.limit_side_len": 960,
+        "Det.limit_side_len": 736,
         "Det.limit_type": "min",
-        "Det.box_thresh": 0.4,
+        "Det.box_thresh": 0.5,
 
         "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
         "EngineConfig.paddle.gpu_id": 0,  # 指定GPU id
