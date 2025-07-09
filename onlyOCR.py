@@ -7,8 +7,9 @@ from copy import deepcopy
 
 
 class OCR:
-    def __init__(self, linux: bool, batch_size: int = 6):
+    def __init__(self, linux: bool, is_batch_rec: bool, batch_size: int = 6):
         self.linux = linux
+        self.is_batch_rec = is_batch_rec
         self.batch_size = batch_size
         self.model_v5_server_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer" if self.linux else "./models/PP-OCRv5_server_rec_infer"
         self.model_v5_server_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_det_infer" if self.linux else  "./models/PP-OCRv5_server_det_infer"
@@ -143,7 +144,7 @@ class OCR:
                 # Version GPU for google colab
                 folder_extractor = RapidVideOCR(
                     RapidVideOCRInput(
-                        is_batch_rec=False,
+                        is_batch_rec=self.is_batch_rec,
                         batch_size=self.batch_size,
                         out_format="srt",
                         ocr_params=folder_ocr_params,
@@ -160,7 +161,7 @@ class OCR:
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 
 
-ocr = OCR(linux=True)
+ocr = OCR(linux=False, is_batch_rec=False)
 ocr.only_ocr()
 # get cpu count
 # import os
