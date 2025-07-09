@@ -73,17 +73,25 @@ class OCR:
         print("Files in folder:", os.listdir(folder))
 
     def get_limit_side_len(self, max_height):
-        batch_height = self.batch_size * (max_height + self.padding)
+        batch_height = self.batch_size * (max_height + self.padding) if self.is_batch_rec else max_height
         # if batch_height < 320:
         #     limit_side_len = 480
         # elif batch_height < 480:
         #     limit_side_len = 640
-        if batch_height < 736:
-            limit_side_len = 736
-        elif batch_height < 960:
-            limit_side_len = 960
+        if self.is_batch_rec:
+            if batch_height < 736:
+                limit_side_len = 736
+            elif batch_height < 960:
+                limit_side_len = 960
+            else:
+                limit_side_len = 1024
         else:
-            limit_side_len = 1024
+            if batch_height < 150:
+                limit_side_len = 320
+            elif batch_height < 240:
+                limit_side_len = 480
+            else:
+                limit_side_len = 736
         # Multiples of 32
         if limit_side_len % 32 != 0:
             limit_side_len = ((limit_side_len // 32) + 1) * 32
@@ -106,7 +114,7 @@ class OCR:
         for folder in glob.glob(os.path.join(self.rgb_dir, "*/")):
             if os.path.isdir(folder):
                 folder_name = os.path.basename(os.path.normpath(folder))
-                # print(f"\nProcessing directory: {folder}\n")
+                print(f"\nProcessing directory: {folder}\n")
                 # outputs/a.srt  outputs/a.txt
                 # extractor(folder, save_dir, save_name=folder_name)
 
