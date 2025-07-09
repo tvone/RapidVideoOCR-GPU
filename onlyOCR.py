@@ -161,7 +161,7 @@ class OCR:
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 
 
-ocr = OCR(linux=False, is_batch_rec=False)
+ocr = OCR(linux=True, is_batch_rec=False)
 ocr.only_ocr()
 # get cpu count
 # import os
