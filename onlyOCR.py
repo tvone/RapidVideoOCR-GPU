@@ -1,4 +1,7 @@
 import sys
+# Support import in google colab
+sys.path.append('/content')
+
 from RapidVideOCR.rapid_videocr import RapidVideOCR, RapidVideOCRInput
 from rapidocr import EngineType, LangRec, ModelType, OCRVersion, LangDet
 import glob
@@ -6,8 +9,6 @@ import os
 from PIL import Image
 from copy import deepcopy
 
-# Support import in google colab
-sys.path.append('/content')
 
 
 class OCR:
