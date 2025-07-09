@@ -1,9 +1,13 @@
+import sys
 from RapidVideOCR.rapid_videocr import RapidVideOCR, RapidVideOCRInput
 from rapidocr import EngineType, LangRec, ModelType, OCRVersion, LangDet
 import glob
 import os
 from PIL import Image
 from copy import deepcopy
+
+# Support import in google colab
+sys.path.append('/content')
 
 
 class OCR:
@@ -48,7 +52,7 @@ class OCR:
 
                 "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
                 "EngineConfig.paddle.gpu_id": 0,  # 指定GPU id
-                "EngineConfig.paddle.gpu_mem": 8192 if self.linux else 1024,  # 指定GPU memory
+                "EngineConfig.paddle.gpu_mem": 14336 if self.linux else 1024,  # 指定GPU memory
                 "Rec.rec_keys_path": self.txt_path
             }
         }
