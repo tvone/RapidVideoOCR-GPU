@@ -1,4 +1,4 @@
-from rapid_videocr import RapidVideOCR, RapidVideOCRInput
+from RapidVideOCR.rapid_videocr import RapidVideOCR, RapidVideOCRInput
 from rapidocr import EngineType, LangRec, ModelType, OCRVersion, LangDet
 import glob
 import os
@@ -125,23 +125,33 @@ class OCR:
                 else:
                     rec_img_shape = [3, 48, 320]
 
+                # With Det.limit_side_len / min
                 folder_ocr_params = deepcopy(self.ocr_input_params["ocr_params"])
                 folder_ocr_params["Rec.rec_img_shape"] = rec_img_shape
                 folder_ocr_params["Det.limit_side_len"] = self.get_limit_side_len(max_height=h)
                 folder_ocr_params["Det.limit_type"] = "min"
+
+                # With Det.limit_side_len / max
+                folder_ocr_params2 = deepcopy(self.ocr_input_params["ocr_params"])
+                folder_ocr_params2["Rec.rec_img_shape"] = rec_img_shape
+                folder_ocr_params2["Det.limit_side_len"] = 1200
+                folder_ocr_params2["Det.limit_type"] = "max"
                 # folder_ocr_params["Global.max_side_len"] = w * target_scale
                 print(folder_ocr_params)
+                print(folder_ocr_params2)
 
                 # Version GPU for google colab
                 folder_extractor = RapidVideOCR(
                     RapidVideOCRInput(
-                        is_batch_rec=True,
+                        is_batch_rec=False,
                         batch_size=self.batch_size,
                         out_format="srt",
-                        ocr_params=folder_ocr_params
+                        ocr_params=folder_ocr_params,
+                        ocr_params2=folder_ocr_params2
                     )
                 )
-                folder_extractor(folder, self.save_dir, save_name=folder_name)
+                srt_results, ass_results, txt_results = folder_extractor(folder, self.save_dir, save_name=folder_name)
+                print(srt_results)
 
         if not self.linux:
             print(f"Max height image in all folder: {self.max_height_in_all_folder}px")
@@ -150,6 +160,9 @@ class OCR:
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 
 
-ocr = OCR(linux=True)
+ocr = OCR(linux=False)
 ocr.only_ocr()
+# get cpu count
+# import os
+# print(os.cpu_count())
 
