@@ -150,8 +150,8 @@ class OCR:
                         ocr_params2=folder_ocr_params2
                     )
                 )
-                srt_results, ass_results, txt_results = folder_extractor(folder, self.save_dir, save_name=folder_name)
-                print(srt_results)
+                folder_extractor(folder, self.save_dir, save_name=folder_name)
+
 
         if not self.linux:
             print(f"Max height image in all folder: {self.max_height_in_all_folder}px")
@@ -160,7 +160,7 @@ class OCR:
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 
 
-ocr = OCR(linux=False)
+ocr = OCR(linux=True)
 ocr.only_ocr()
 # get cpu count
 # import os
