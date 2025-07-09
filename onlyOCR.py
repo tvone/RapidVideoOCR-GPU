@@ -127,7 +127,7 @@ class OCR:
 
                 folder_ocr_params = deepcopy(self.ocr_input_params["ocr_params"])
                 folder_ocr_params["Rec.rec_img_shape"] = rec_img_shape
-                folder_ocr_params["Det.limit_side_len"] = self.get_limit_side_len(max_height=h)
+                # folder_ocr_params["Det.limit_side_len"] = self.get_limit_side_len(max_height=h)
                 # folder_ocr_params["Global.max_side_len"] = w * target_scale
                 print(folder_ocr_params)
 
@@ -149,6 +149,6 @@ class OCR:
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 
 
-ocr = OCR(linux=False)
+ocr = OCR(linux=True)
 ocr.only_ocr()
 
