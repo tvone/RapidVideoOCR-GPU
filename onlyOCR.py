@@ -59,7 +59,7 @@ class OCR:
             }
         }
 
-        self.rgb_dir_list = ["images/1", "images/2"]
+        self.rgb_dir_list = ["images/1", "images/2","images/3", "images/4", "images/5", "images/6"]
         self.save_dir = "/content/drive/MyDrive/RapidVideoOCR/outputs" if self.linux else "./outputs"
         # Options
         self.target_scale = 2
