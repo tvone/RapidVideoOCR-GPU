@@ -8,8 +8,9 @@ import glob
 import os
 from PIL import Image
 from copy import deepcopy
-
-
+from multiprocessing import Pool
+from pathlib import Path
+import zipfile
 
 class OCR:
     def __init__(self, linux: bool, is_batch_rec: bool, batch_size: int = 6):
@@ -58,7 +59,7 @@ class OCR:
             }
         }
 
-        self.rgb_dir = "images"
+        self.rgb_dir_list = ["images/1", "images2/2"]
         self.save_dir = "/content/drive/MyDrive/RapidVideoOCR/outputs" if self.linux else "./outputs"
         # Options
         self.target_scale = 2
@@ -110,8 +111,8 @@ class OCR:
         if self.max_height_in_all_folder < height:
             self.max_height_in_all_folder = height
 
-    def only_ocr(self):
-        for folder in glob.glob(os.path.join(self.rgb_dir, "*/")):
+    def only_ocr(self, rgb_dir):
+        for folder in glob.glob(os.path.join(rgb_dir, "*/")):
             if os.path.isdir(folder):
                 folder_name = os.path.basename(os.path.normpath(folder))
                 print(f"\nProcessing directory: {folder}\n")
@@ -160,8 +161,7 @@ class OCR:
                         is_batch_rec=self.is_batch_rec,
                         batch_size=self.batch_size,
                         out_format="srt",
-                        ocr_params=folder_ocr_params,
-                        ocr_params2=folder_ocr_params2
+                        ocr_params_list=[folder_ocr_params, folder_ocr_params2],
                     )
                 )
                 folder_extractor(folder, self.save_dir, save_name=folder_name)
@@ -173,9 +173,47 @@ class OCR:
 
 # Document: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/usage/#__tabbed_3_4
 
+def only_ocr_worker(args):
+    rgb_dir, linux, is_batch_rec = args
+    pid = os.getpid()
+    print(f"[PID {pid}] Processing folder: {rgb_dir}")
+    ocr = OCR(linux=linux, is_batch_rec=is_batch_rec)  # Initialize each process separately
+    return ocr.only_ocr(rgb_dir)
 
-ocr = OCR(linux=True, is_batch_rec=False)
-ocr.only_ocr()
+
+def main():
+    linux = False
+    is_batch_rec = False
+    ocr = OCR(linux=linux, is_batch_rec=is_batch_rec)
+    rgb_dir_list = ocr.rgb_dir_list
+
+    # Unzip file
+    for i in range(1, len(rgb_dir_list) + 1):
+        # Đường dẫn folder gốc chứa zip file
+        zip_dir = f'/content/drive/MyDrive/RapidVideoOCR/images/{i}' if linux else f'./test/{i}'
+        # Đường dẫn folder đích
+        out_dir = f'images/{i}'
+        os.makedirs(out_dir, exist_ok=True)
+
+        # Find all file zip in zip_dir
+        zip_files = list(Path(zip_dir).glob('*.zip'))
+        for zip_path in zip_files:
+            print(f"Unzipping {zip_path} to {out_dir}")
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                zip_ref.extractall(out_dir)
+
+    # Create list args for each folder
+    pool_args = [(rgb_dir, linux, is_batch_rec) for rgb_dir in rgb_dir_list]
+
+    with Pool(processes=len(rgb_dir_list)) as pool:  # Adjust the number of processes to suit the GPU/CPU
+        results = pool.map(only_ocr_worker, pool_args)
+
+
+if __name__ == '__main__':
+    import multiprocessing
+
+    multiprocessing.freeze_support()
+    main()
 # get cpu count
 # import os
 # print(os.cpu_count())
