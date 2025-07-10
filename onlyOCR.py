@@ -182,7 +182,7 @@ def only_ocr_worker(args):
 
 
 def main():
-    linux = False
+    linux = os.name == "posix"
     is_batch_rec = False
     ocr = OCR(linux=linux, is_batch_rec=is_batch_rec)
     rgb_dir_list = ocr.rgb_dir_list
