@@ -59,7 +59,6 @@ class OCR:
             }
         }
 
-        self.rgb_dir_list = ["images/1", "images/2","images/3", "images/4", "images/5", "images/6"]
         self.save_dir = "/content/drive/MyDrive/RapidVideoOCR/outputs" if self.linux else "./outputs"
         # Options
         self.target_scale = 2
@@ -143,12 +142,12 @@ class OCR:
                 # With Det.limit_side_len / min
                 folder_ocr_params = deepcopy(self.ocr_input_params["ocr_params"])
                 folder_ocr_params["Rec.rec_img_shape"] = rec_img_shape
-                folder_ocr_params["Det.limit_side_len"] = self.get_limit_side_len(max_height=h)[0]
+                folder_ocr_params["Det.limit_side_len"] = self.get_limit_side_len(max_height=h) if self.is_batch_rec else self.get_limit_side_len(max_height=h)[0]
                 folder_ocr_params["Det.limit_type"] = "min"
 
                 folder_ocr_params2 = deepcopy(self.ocr_input_params["ocr_params"])
                 folder_ocr_params2["Rec.rec_img_shape"] = rec_img_shape
-                folder_ocr_params2["Det.limit_side_len"] = self.get_limit_side_len(max_height=h)[1]
+                folder_ocr_params2["Det.limit_side_len"] = self.get_limit_side_len(max_height=h) if self.is_batch_rec else self.get_limit_side_len(max_height=h)[1]
                 folder_ocr_params2["Det.limit_type"] = "min"
 
                 # With Det.limit_side_len / max
@@ -157,9 +156,9 @@ class OCR:
                 folder_ocr_params3["Det.limit_side_len"] = 1280
                 folder_ocr_params3["Det.limit_type"] = "max"
                 # folder_ocr_params["Global.max_side_len"] = w * target_scale
-                print(folder_ocr_params)
-                print(folder_ocr_params2)
-                print(folder_ocr_params3)
+                # print(folder_ocr_params)
+                # print(folder_ocr_params2)
+                # print(folder_ocr_params3)
 
 
                 # Version GPU for google colab
@@ -191,8 +190,8 @@ def only_ocr_worker(args):
 def main():
     linux = os.name == "posix"
     is_batch_rec = False
-    ocr = OCR(linux=linux, is_batch_rec=is_batch_rec)
-    rgb_dir_list = ocr.rgb_dir_list
+    # Folder containing subfolders containing images
+    rgb_dir_list = [f"images/{i}" for i in range(1, 5)]
 
     # Unzip file
     for i in range(1, len(rgb_dir_list) + 1):
@@ -214,6 +213,8 @@ def main():
 
     with Pool(processes=len(rgb_dir_list)) as pool:  # Adjust the number of processes to suit the GPU/CPU
         results = pool.map(only_ocr_worker, pool_args)
+    # # Test
+    # only_ocr_worker((rgb_dir_list[0], linux, is_batch_rec))
 
 
 if __name__ == '__main__':

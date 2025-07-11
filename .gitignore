@@ -1,4 +1,6 @@
 .idea/
 images/*
 !images/readme.txt
+outputs/*
+!outputs/readme.txt
 test/*
