@@ -197,7 +197,7 @@ def main():
     linux = os.name == "posix"
     is_batch_rec = False
     # Folder containing subfolders containing images
-    rgb_dir_list = [f"images/{i}" for i in range(1, 5)]
+    rgb_dir_list = [f"images/{i}" for i in range(1, 4)]
 
     # Unzip file
     for i in range(1, len(rgb_dir_list) + 1):
