@@ -48,7 +48,7 @@ class OCR:
                 "Det.model_type": ModelType.SERVER,
                 "Det.ocr_version": OCRVersion.PPOCRV5,
 
-                "Det.limit_side_len": 1200,
+                "Det.limit_side_len": 1280,
                 "Det.limit_type": "max",
                 "Det.box_thresh": 0.5,
 
@@ -87,11 +87,11 @@ class OCR:
                 limit_side_len = 1024
         else:
             if batch_height < 150:
-                limit_side_len = [320, 480]
+                limit_side_len = [320, 480, 640]
             elif batch_height < 240:
-                limit_side_len = [480, 640]
+                limit_side_len = [480, 640, 736]
             else:
-                limit_side_len = [640, 736]
+                limit_side_len = [640, 736, 832]
         # Multiples of 32
         # if limit_side_len % 32 != 0:
         #     limit_side_len = ((limit_side_len // 32) + 1) * 32
@@ -150,11 +150,17 @@ class OCR:
                 folder_ocr_params2["Det.limit_side_len"] = self.get_limit_side_len(max_height=h) if self.is_batch_rec else self.get_limit_side_len(max_height=h)[1]
                 folder_ocr_params2["Det.limit_type"] = "min"
 
-                # With Det.limit_side_len / max
                 folder_ocr_params3 = deepcopy(self.ocr_input_params["ocr_params"])
                 folder_ocr_params3["Rec.rec_img_shape"] = rec_img_shape
-                folder_ocr_params3["Det.limit_side_len"] = 1280
-                folder_ocr_params3["Det.limit_type"] = "max"
+                folder_ocr_params3["Det.limit_side_len"] = self.get_limit_side_len(max_height=h) if self.is_batch_rec else self.get_limit_side_len(max_height=h)[2]
+                folder_ocr_params3["Det.limit_type"] = "min"
+
+
+                # With Det.limit_side_len / max
+                folder_ocr_params4 = deepcopy(self.ocr_input_params["ocr_params"])
+                folder_ocr_params4["Rec.rec_img_shape"] = rec_img_shape
+                folder_ocr_params4["Det.limit_side_len"] = 1280
+                folder_ocr_params4["Det.limit_type"] = "max"
                 # folder_ocr_params["Global.max_side_len"] = w * target_scale
                 # print(folder_ocr_params)
                 # print(folder_ocr_params2)
@@ -167,7 +173,7 @@ class OCR:
                         is_batch_rec=self.is_batch_rec,
                         batch_size=self.batch_size,
                         out_format="srt",
-                        ocr_params_list=[folder_ocr_params, folder_ocr_params2, folder_ocr_params3]
+                        ocr_params_list=[folder_ocr_params, folder_ocr_params2, folder_ocr_params3, folder_ocr_params4]
                     )
                 )
                 folder_extractor(folder, self.save_dir, save_name=folder_name)
