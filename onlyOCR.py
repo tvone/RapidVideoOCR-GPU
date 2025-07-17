@@ -197,31 +197,31 @@ def only_ocr_worker(args):
 def main():
     linux = os.name == "posix"
     is_batch_rec = False
-    # Folder containing subfolders containing images
-    rgb_dir_list = [f"images/{i}" for i in range(1, 5)]
-
-    # Unzip file
-    for i in range(1, len(rgb_dir_list) + 1):
-        # Đường dẫn folder gốc chứa zip file
-        zip_dir = f'/content/drive/MyDrive/RapidVideoOCR/images/{i}' if linux else f'./test/{i}'
-        # Đường dẫn folder đích
-        out_dir = f'images/{i}'
-        os.makedirs(out_dir, exist_ok=True)
-
-        # Find all file zip in zip_dir
-        zip_files = list(Path(zip_dir).glob('*.zip'))
-        for zip_path in zip_files:
-            print(f"Unzipping {zip_path} to {out_dir}")
-            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                zip_ref.extractall(out_dir)
-
-    # Create list args for each folder
-    pool_args = [(rgb_dir, linux, is_batch_rec) for rgb_dir in rgb_dir_list]
-
-    with Pool(processes=len(rgb_dir_list)) as pool:  # Adjust the number of processes to suit the GPU/CPU
-        results = pool.map(only_ocr_worker, pool_args)
+    # # Folder containing subfolders containing images
+    # rgb_dir_list = [f"images/{i}" for i in range(1, 5)]
+    #
+    # # Unzip file
+    # for i in range(1, len(rgb_dir_list) + 1):
+    #     # Đường dẫn folder gốc chứa zip file
+    #     zip_dir = f'/content/drive/MyDrive/RapidVideoOCR/images/{i}' if linux else f'./test/{i}'
+    #     # Đường dẫn folder đích
+    #     out_dir = f'images/{i}'
+    #     os.makedirs(out_dir, exist_ok=True)
+    #
+    #     # Find all file zip in zip_dir
+    #     zip_files = list(Path(zip_dir).glob('*.zip'))
+    #     for zip_path in zip_files:
+    #         print(f"Unzipping {zip_path} to {out_dir}")
+    #         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    #             zip_ref.extractall(out_dir)
+    #
+    # # Create list args for each folder
+    # pool_args = [(rgb_dir, linux, is_batch_rec) for rgb_dir in rgb_dir_list]
+    #
+    # with Pool(processes=len(rgb_dir_list)) as pool:  # Adjust the number of processes to suit the GPU/CPU
+    #     results = pool.map(only_ocr_worker, pool_args)
     # # Test
-    # only_ocr_worker((rgb_dir_list[0], linux, is_batch_rec))
+    only_ocr_worker(("images", linux, is_batch_rec))
 
 
 if __name__ == '__main__':
