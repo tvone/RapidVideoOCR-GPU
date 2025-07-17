@@ -1,7 +1,7 @@
 import sys
 # Support import in google colab
 sys.path.append('/content')
-
+import psutil
 from RapidVideOCR.rapid_videocr import RapidVideOCR, RapidVideOCRInput
 from rapidocr import EngineType, LangRec, ModelType, OCRVersion, LangDet
 import glob
@@ -132,12 +132,14 @@ class OCR:
                 if not self.linux:
                     self.get_max_height_in_all_folder(h)
 
-                if h >= 60:
-                    rec_img_shape = [3, 64, 320]
-                elif h >= 36:
-                    rec_img_shape = [3, 48, 320]
-                else:
-                    rec_img_shape = [3, 48, 320]
+                # if h >= 60:
+                #     rec_img_shape = [3, 64, 320]
+                # elif h >= 36:
+                #     rec_img_shape = [3, 48, 320]
+                # else:
+                #     rec_img_shape = [3, 48, 320]
+
+                rec_img_shape = [3, 48, 320]
 
                 # With Det.limit_side_len / min
                 folder_ocr_params = deepcopy(self.ocr_input_params["ocr_params"])
@@ -197,7 +199,7 @@ def main():
     linux = os.name == "posix"
     is_batch_rec = False
     # Folder containing subfolders containing images
-    rgb_dir_list = [f"images/{i}" for i in range(1, 4)]
+    rgb_dir_list = [f"images/{i}" for i in range(1, 5)]
 
     # Unzip file
     for i in range(1, len(rgb_dir_list) + 1):
