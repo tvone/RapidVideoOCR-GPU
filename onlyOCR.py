@@ -1,7 +1,6 @@
 import sys
 # Support import in google colab
 sys.path.append('/content')
-import psutil
 from RapidVideOCR.rapid_videocr import RapidVideOCR, RapidVideOCRInput
 from rapidocr import EngineType, LangRec, ModelType, OCRVersion, LangDet
 import glob
