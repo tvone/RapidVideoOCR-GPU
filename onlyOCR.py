@@ -24,7 +24,7 @@ class OCR:
 
         self.txt_path = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer/ppocrv5_dict.txt" if self.linux else "./models/PP-OCRv5_server_rec_infer/ppocrv5_dict.txt"
         self.ocr_input_params = {
-            "is_batch_rec": True,
+            "is_batch_rec": self.is_batch_rec,
             batch_size: self.batch_size,
             "out_format": "srt",
 
@@ -36,7 +36,7 @@ class OCR:
                 "Global.max_side_len": 4000,
                 "Rec.model_dir": self.model_v5_server_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
                 "Rec.engine_type": EngineType.PADDLE,
-                "Rec.lang_type": LangRec.JAPAN,
+                "Rec.lang_type": LangRec.CH,
                 "Rec.model_type": ModelType.SERVER,
                 "Rec.ocr_version": OCRVersion.PPOCRV5,
                 "Rec.rec_img_shape": [3, 48, 320],
