@@ -36,7 +36,7 @@ class OCR:
                 "Global.max_side_len": 4000,
                 "Rec.model_dir": self.model_v5_server_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
                 "Rec.engine_type": EngineType.PADDLE,
-                "Rec.lang_type": LangRec.JAPAN,
+                "Rec.lang_type": LangRec.CH,
                 "Rec.model_type": ModelType.SERVER,
                 "Rec.ocr_version": OCRVersion.PPOCRV5,
                 "Rec.rec_img_shape": [3, 48, 320],
