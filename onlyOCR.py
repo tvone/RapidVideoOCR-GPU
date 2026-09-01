@@ -12,49 +12,123 @@ from pathlib import Path
 import zipfile
 
 class OCR:
-    def __init__(self, linux: bool, is_batch_rec: bool, batch_size: int = 6):
+    def __init__(self, linux: bool, is_batch_rec: bool, batch_size: int = 6, engine_type: str = 'paddle'):
         self.linux = linux
         self.is_batch_rec = is_batch_rec
         self.batch_size = batch_size
+
+        self.model_v6_server_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv6_medium_rec" if self.linux else "./models/PP-OCRv6_medium_rec"
+        self.model_v6_server_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv6_medium_det" if self.linux else "./models/PP-OCRv6_medium_det"
+
+        self.model_v6_server_rec_onnx = "/content/RapidVideoOCR-GPU/models/PP-OCRv6_medium_rec_onnx/inference.onnx" if self.linux else "./models/PP-OCRv6_medium_rec_onnx/inference.onnx"
+        self.model_v6_server_det_onnx = "/content/RapidVideoOCR-GPU/models/PP-OCRv6_medium_det_onnx/inference.onnx" if self.linux else "./models/PP-OCRv6_medium_det_onnx/inference.onnx"
+
         self.model_v5_server_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer" if self.linux else "./models/PP-OCRv5_server_rec_infer"
         self.model_v5_server_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_det_infer" if self.linux else  "./models/PP-OCRv5_server_det_infer"
 
         self.model_v5_mobile_rec = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_mobile_rec_infer" if self.linux else "./models/PP-OCRv5_mobile_rec_infer"
         self.model_v5_mobile_det = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_mobile_det_infer" if self.linux else "./models/PP-OCRv5_mobile_det_infer"
 
-        self.txt_path = "/content/RapidVideoOCR-GPU/models/PP-OCRv5_server_rec_infer/ppocrv5_dict.txt" if self.linux else "./models/PP-OCRv5_server_rec_infer/ppocrv5_dict.txt"
+        self.txt_path_v5 = "/content/RapidVideoOCR-GPU/models/dict/ppocrv5_dict.txt" if self.linux else "./models/dict/ppocrv5_dict.txt"
+        self.txt_path_v6 = "/content/RapidVideoOCR-GPU/models/dict/ppocrv6_dict.txt" if self.linux else "./models/dict/ppocrv6_dict.txt"
+
+        # self.ocr_input_params = {
+        #     "is_batch_rec": self.is_batch_rec,
+        #     batch_size: self.batch_size,
+        #     "out_format": "srt",
+        #
+        #     # Document params: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/parameters/?h=rec+lang+type
+        #     "ocr_params": {
+        #         "Global.use_det": True,
+        #         "Global.use_rec": True,
+        #         "Global.use_cls": False,
+        #         "Global.max_side_len": 4000,
+        #         "Rec.model_dir": self.model_v5_server_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
+        #         "Rec.engine_type": EngineType.PADDLE,
+        #         "Rec.lang_type": LangRec.JAPAN,
+        #         "Rec.model_type": ModelType.SERVER,
+        #         "Rec.ocr_version": OCRVersion.PPOCRV5,
+        #         "Rec.rec_img_shape": [3, 48, 320],
+        #
+        #         "Det.model_dir": self.model_v5_server_det,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
+        #         "Det.engine_type": EngineType.PADDLE,
+        #         "Det.lang_type": LangDet.MULTI,
+        #         "Det.model_type": ModelType.SERVER,
+        #         "Det.ocr_version": OCRVersion.PPOCRV5,
+        #
+        #         "Det.limit_side_len": 1280,
+        #         "Det.limit_type": "max",
+        #         "Det.box_thresh": 0.5,
+        #
+        #         "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
+        #         "EngineConfig.paddle.gpu_id": 0,  # 指定GPU id
+        #         "EngineConfig.paddle.gpu_mem": 14336 if self.linux else 1024,  # 指定GPU memory
+        #         "Rec.rec_keys_path": self.txt_path_v5
+        #     }
+        # }
+
         self.ocr_input_params = {
             "is_batch_rec": self.is_batch_rec,
-            batch_size: self.batch_size,
+            "batch_size": self.batch_size,
             "out_format": "srt",
 
             # Document params: https://rapidai.github.io/RapidOCRDocs/main/install_usage/rapidocr/parameters/?h=rec+lang+type
             "ocr_params": {
                 "Global.use_det": True,
                 "Global.use_rec": True,
-                "Global.use_cls": True,
+                "Global.use_cls": False,
                 "Global.max_side_len": 4000,
-                "Rec.model_dir": self.model_v5_server_rec,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
+
+                "Rec.model_dir": self.model_v6_server_rec, # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
                 "Rec.engine_type": EngineType.PADDLE,
                 "Rec.lang_type": LangRec.JAPAN,
-                "Rec.model_type": ModelType.SERVER,
-                "Rec.ocr_version": OCRVersion.PPOCRV5,
+                "Rec.model_type": ModelType.MEDIUM,
+                "Rec.ocr_version": OCRVersion.PPOCRV6,
                 "Rec.rec_img_shape": [3, 48, 320],
 
-                "Det.model_dir": self.model_v5_server_det,  # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
+                "Det.model_dir": self.model_v6_server_det, # model_dir for paddlepaddle-gpu, if it diffirent will be model_path
                 "Det.engine_type": EngineType.PADDLE,
                 "Det.lang_type": LangDet.MULTI,
-                "Det.model_type": ModelType.SERVER,
-                "Det.ocr_version": OCRVersion.PPOCRV5,
+                "Det.model_type": ModelType.MEDIUM,
+                "Det.ocr_version": OCRVersion.PPOCRV6,
 
                 "Det.limit_side_len": 1280,
                 "Det.limit_type": "max",
                 "Det.box_thresh": 0.5,
 
                 "EngineConfig.paddle.use_cuda": True,  # 使用PaddlePaddle GPU版推理
-                "EngineConfig.paddle.gpu_id": 0,  # 指定GPU id
-                "EngineConfig.paddle.gpu_mem": 14336 if self.linux else 1024,  # 指定GPU memory
-                "Rec.rec_keys_path": self.txt_path
+                "EngineConfig.paddle.cuda_ep_cfg.device_id": 0,  # 指定GPU id
+                "EngineConfig.paddle.cuda_ep_cfg.gpu_mem": 14336 if self.linux else 1024,  # 指定GPU memory
+
+                "Rec.rec_keys_path": self.txt_path_v6
+            } if engine_type == "paddle" else
+            {
+                "Global.use_det": True,
+                "Global.use_rec": True,
+                "Global.use_cls": False,
+                "Global.max_side_len": 4000,
+
+                "Rec.model_path": self.model_v6_server_rec_onnx,
+                "Rec.engine_type": EngineType.ONNXRUNTIME,
+                "Rec.lang_type": LangRec.JAPAN,  # sửa: v6 rec chỉ có 'ch', vẫn đọc tiếng Nhật
+                "Rec.model_type": ModelType.MEDIUM,  # sửa: v6 là tiny/small/medium, không có SERVER
+                "Rec.ocr_version": OCRVersion.PPOCRV6,
+                "Rec.rec_img_shape": [3, 48, 320],  # giữ nguyên, khớp inference.yml của v6 medium
+
+                "Det.model_path": self.model_v6_server_det_onnx,
+                "Det.engine_type": EngineType.ONNXRUNTIME,
+                "Det.lang_type": LangDet.MULTI,  # sửa: nguyên nhân ValueError
+                "Det.model_type": ModelType.MEDIUM,
+                "Det.ocr_version": OCRVersion.PPOCRV6,
+
+                "Det.limit_side_len": 1280,
+                "Det.limit_type": "max",
+                "Det.box_thresh": 0.5,
+
+                "EngineConfig.onnxruntime.use_cuda": True,
+                "EngineConfig.onnxruntime.cuda_ep_cfg.device_id": 0,
+
+                "Rec.rec_keys_path": self.txt_path_v6
             }
         }
 
@@ -190,7 +264,7 @@ def only_ocr_worker(args):
     rgb_dir, linux, is_batch_rec = args
     pid = os.getpid()
     print(f"[PID {pid}] Processing folder: {rgb_dir}")
-    ocr = OCR(linux=linux, is_batch_rec=is_batch_rec)  # Initialize each process separately
+    ocr = OCR(linux=linux, is_batch_rec=is_batch_rec, engine_type="paddle")  # Initialize each process separately
     return ocr.only_ocr(rgb_dir)
 
 
