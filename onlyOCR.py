@@ -110,14 +110,14 @@ class OCR:
 
                 "Rec.model_path": self.model_v6_server_rec_onnx,
                 "Rec.engine_type": EngineType.ONNXRUNTIME,
-                "Rec.lang_type": LangRec.JAPAN,  # sửa: v6 rec chỉ có 'ch', vẫn đọc tiếng Nhật
-                "Rec.model_type": ModelType.MEDIUM,  # sửa: v6 là tiny/small/medium, không có SERVER
+                "Rec.lang_type": LangRec.JAPAN,
+                "Rec.model_type": ModelType.MEDIUM,
                 "Rec.ocr_version": OCRVersion.PPOCRV6,
-                "Rec.rec_img_shape": [3, 48, 320],  # giữ nguyên, khớp inference.yml của v6 medium
+                "Rec.rec_img_shape": [3, 48, 320],
 
                 "Det.model_path": self.model_v6_server_det_onnx,
                 "Det.engine_type": EngineType.ONNXRUNTIME,
-                "Det.lang_type": LangDet.MULTI,  # sửa: nguyên nhân ValueError
+                "Det.lang_type": LangDet.MULTI,
                 "Det.model_type": ModelType.MEDIUM,
                 "Det.ocr_version": OCRVersion.PPOCRV6,
 
